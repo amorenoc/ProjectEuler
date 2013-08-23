@@ -33,5 +33,4 @@ def p14():
             number = i
     return number
 
-#print p14()
-print genCollatzSeqLen(837799)
+print p14()
