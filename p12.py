@@ -6,7 +6,17 @@
 
 import math
 
-def getPrimeDivisors(a,n):
+def sieve(x):
+    a = [i for i in xrange(3,x,2)]
+    sqrtx = math.sqrt(x)
+    for j in range(len(a)):
+        if sqrtx > a[j]:
+            break
+        a[:] = a[0:j+1] + [i for i in a[j+1:] if i % a[j]]
+    a.insert(0,2)
+    return a
+
+def primeDivisors(a,n):
     for i in a:
         if i <= n:
             if n % i:
@@ -16,17 +26,17 @@ def getPrimeDivisors(a,n):
         else:
             return
 
-def sieve(x):
-    a = [i for i in xrange(3,x,2)]
-    for j in range(len(a)):
-        if math.sqrt(x) > a[j]:
-            break
-        a[:] = a[0:j+1] + [i for i in a[j+1:] if i % a[j]]
-    a.insert(0,2)
-    return a
-    
-def divisorTriangle(x):
-    div = []
+def getDivCount(a,x):
+    div = [1]
+    t = 1
+    for i in primeDivisors(a,x):
+        div.append(1)
+        while x % (t*i) == 0:
+            t *= i
+            div[-1] += 1
+    return reduce(lambda a,b: a*b, div)
+
+def getTriangleDivCount(x):
     y = x+1
     a = sieve(y)
     if not a:
@@ -35,25 +45,12 @@ def divisorTriangle(x):
         x //= 2
     else:
         y //= 2
-    t = 1
-    for i in getPrimeDivisors(a,x):
-        div.append(1)
-        while x % (t*i) == 0:
-            t *= i
-            div[-1] += 1
-    t = 1
-    for i in getPrimeDivisors(a,y):
-        div.append(1)
-        while y % (t*i) == 0:
-            t *= i
-            div[-1] += 1
-    return reduce(lambda a,b: a*b, div)
+    return getDivCount(a,x)*getDivCount(a,y)
 
 def p12():
-    x = 7
+    x = 1
     while True:
-        div = divisorTriangle(x)
-        if div > 500:
+        if getTriangleDivCount(x) > 500:
             return x*(x+1)/2
         x += 1
 
