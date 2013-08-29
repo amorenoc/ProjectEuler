@@ -10,7 +10,7 @@ def sieve(x):
     a = [i for i in xrange(3,x,2)]
     sqrtx = math.sqrt(x)
     for j in range(len(a)):
-        if sqrtx > a[j]:
+        if sqrtx < a[j]:
             break
         a[:] = a[0:j+1] + [i for i in a[j+1:] if i % a[j]]
     a.insert(0,2)
